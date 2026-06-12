@@ -4,13 +4,16 @@ import SalesTable from "@/app/features/sales/components/SalesTable";
 import SCPagination from "@/app/shared/components/SCPagination";
 import SalesButtonModal from "@/app/features/sales/components/SalesButtonModal";
 import { useSales } from "@/app/features/sales/hooks/useSales";
+import { useUser } from "@/app/features/user/hooks/useUser";
 
 function Page() {
   const { info, results, getAllSales } = useSales();
+  const {getInfoUser} = useUser();
   const [pageCurrent, setPageCurrent] = useState(1);
 
   useEffect(() => {
     getAllSales();
+    getInfoUser();
   }, []);
 
   return (

@@ -53,7 +53,6 @@ function SalesButtonModal({ text, action, idDetail }: ISalesForm) {
       });
       setIsModalOpen(false);
       form.resetFields();
-      console.log(":D");
     }
 
     if (action === "delete" && idDetail) {

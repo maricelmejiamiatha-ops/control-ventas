@@ -72,7 +72,7 @@ export const updateOneSaleByID = createAsyncThunk<
   ISalesSendData,
   { rejectValue: IError }
 >("sales/update", async (data, { rejectWithValue }) => {
-  try {   
+  try {
     return await updateOneSale(data);
   } catch (error) {
     return rejectWithValue(error as IError);
@@ -127,7 +127,7 @@ const salesSlice = createSlice({
 
       // TODO CREATE
       .addCase(createSale.fulfilled, (state, action) => {
-        // state.results.unshift(action.payload.results);
+        state.results.unshift(action.payload.results);
       })
 
       // TODO UPDATE
