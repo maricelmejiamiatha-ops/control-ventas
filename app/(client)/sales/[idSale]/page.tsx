@@ -31,15 +31,17 @@ function Page({ params }: IParams) {
         <div className="flex flex-wrap md:flex-nowrap justify-start md:justify-end items-center gap-2">
           <ItemButtonModal text="Crear" action="create" idDetail={+idSale} />
 
-          <PDFButton
-            idDetail={+idSale}
-            date={date}
-            cufCode={cufCode}
-            items={results}
-            subTotal={subTotal}
-            userInfo={userInfo}
-            clientInfo={clientInfo}
-          />
+          {results.length > 0 && (
+            <PDFButton
+              idDetail={+idSale}
+              date={date}
+              cufCode={cufCode}
+              items={results}
+              subTotal={subTotal}
+              userInfo={userInfo}
+              clientInfo={clientInfo}
+            />
+          )}
         </div>
       </div>
 
@@ -48,7 +50,7 @@ function Page({ params }: IParams) {
       </div>
 
       <div className="flex justify-center mt-6">
-        <SCPagination infoSales={info} />
+        <SCPagination infoSales={info} render={undefined} />
       </div>
     </div>
   );

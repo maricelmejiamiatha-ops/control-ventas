@@ -84,24 +84,24 @@ function PDFButton8M({
     });
     pdf.setFontSize(8);
     pdf.setFont("helvetica", "bold");
-    pdf.text("NOMBRE/RAZÓN SOCIAL:", 7, 84);
+    pdf.text("NOMBRE/RAZÓN SOCIAL:", 5, 84);
     pdf.setFont("helvetica", "normal");
-    pdf.text(`${clientInfo.nameClient}`, 45, 84);
+    pdf.text(`${clientInfo.nameClient}`, 43, 84);
 
     pdf.setFont("helvetica", "bold");
-    pdf.text("NIT/CI/CEX:", 27.1, 88);
+    pdf.text("NIT/CI/CEX:", 25.1, 88);
     pdf.setFont("helvetica", "normal");
-    pdf.text(`${clientInfo.ciClient}`, 45, 88);
+    pdf.text(`${clientInfo.ciClient}`, 43, 88);
 
     pdf.setFont("helvetica", "bold");
-    pdf.text("COD. CLIENTE:", 21.9, 92);
+    pdf.text("COD. CLIENTE:", 19.9, 92);
     pdf.setFont("helvetica", "normal");
-    pdf.text(`${clientInfo.ciClient}`, 45, 92);
+    pdf.text(`${clientInfo.ciClient}`, 43, 92);
 
     pdf.setFont("helvetica", "bold");
-    pdf.text("FECHA DE EMISIÓN:", 14.7, 96);
+    pdf.text("FECHA DE EMISIÓN:", 12.7, 96);
     pdf.setFont("helvetica", "normal");
-    pdf.text(`${date.toUpperCase()}`, 45, 96);
+    pdf.text(`${date.toUpperCase()}`, 43, 96);
 
     pdf.setFontSize(16);
     pdf.text("- - - - - - - - - - - - - - - - - - - - -", 40, 100, {
@@ -202,7 +202,7 @@ function PDFButton8M({
 
     pdf.setFont("helvetica", "normal");
     pdf.setFontSize(7);
-    pdf.text(`Son: ${numberToSpanishWords(total)} Bolivianos`, 5.5, y);
+    pdf.text(`Son: ${numberToSpanishWords(total)} Bolivianos`, 5, y);
 
     pdf.setFont("helvetica", "bold");
     pdf.setFontSize(16);

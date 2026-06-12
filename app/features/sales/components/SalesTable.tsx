@@ -1,9 +1,44 @@
 "use client";
-import React from "react";
 import { Table } from "antd";
 import SalesButtonActions from "./SalesButtonActions";
 import SalesButtonModal from "./SalesButtonModal";
 import ItemButtonModal from "./ItemButtonModal";
+import { IItem, ISalesDetail } from "../types";
+
+interface SalesTableRow {
+  key: number;
+  idDetail: number;
+  idClient: number;
+  numberItem: number;
+  dateDetail: string;
+  total: string;
+  nameClient: string;
+  ciClient: string;
+}
+
+interface ItemTableRow {
+  key: number;
+  idDetail: number;
+  idListDetail: number;
+  numberItem: number;
+  codeService: string;
+  amount: number;
+  unitMeasurement: string;
+  descriptionDetail: string;
+  unitPrice: number;
+  discount: number;
+  subTotal: number;
+}
+
+type SalesTableProps =
+  | {
+      resultSales: ISalesDetail[];
+      render: "sales";
+    }
+  | {
+      resultSales: IItem[];
+      render: "items";
+    };
 
 const columnsSales = [
   {
@@ -40,7 +75,7 @@ const columnsSales = [
     title: "Acciones",
     key: "actions",
     width: 140,
-    render: ({ idDetail }: any) => (
+    render: ({ idDetail }: { idDetail: number }) => (
       <div className="flex gap-1">
         <SalesButtonActions Text="Ver" idDetail={idDetail} />
         <SalesButtonModal text="Editar" action="update" idDetail={idDetail} />
@@ -50,11 +85,11 @@ const columnsSales = [
   },
 ];
 
-const salesMapInfo = (data: any) => {
+const salesMapInfo = (data: ISalesDetail[]) => {
   return data?.map(
     (
-      { idDetail, idClient, dateDetail, total, infoClient }: any,
-      index: any,
+      { idDetail, idClient, dateDetail, total, infoClient }: ISalesDetail,
+      index: number,
     ) => ({
       key: idDetail,
       idDetail,
@@ -108,7 +143,13 @@ const columnItems = [
   {
     title: "Acciones",
     key: "actions",
-    render: ({ idDetail, idListDetail }: any) => (
+    render: ({
+      idDetail,
+      idListDetail,
+    }: {
+      idDetail: number;
+      idListDetail: number;
+    }) => (
       <div className="flex flex-col items-center gap-4 md:flex md:flex-row">
         <ItemButtonModal
           text="Editar"
@@ -127,7 +168,7 @@ const columnItems = [
   },
 ];
 
-const itemsMapInfo = (data: any) => {
+const itemsMapInfo = (data: IItem[]) => {
   return data?.map(
     (
       {
@@ -140,8 +181,8 @@ const itemsMapInfo = (data: any) => {
         unitPrice,
         discount,
         subTotal,
-      }: any,
-      index: any,
+      }: IItem,
+      index: number,
     ) => ({
       key: idListDetail,
       idDetail,
@@ -158,11 +199,11 @@ const itemsMapInfo = (data: any) => {
   );
 };
 
-const SalesTable = ({ resultSales, render }: any) => {
+const SalesTable = ({ resultSales, render }: SalesTableProps) => {
   return (
     <>
       {render === "sales" && (
-        <Table<any>
+        <Table<SalesTableRow>
           columns={columnsSales}
           dataSource={salesMapInfo(resultSales)}
           pagination={false}
@@ -170,7 +211,7 @@ const SalesTable = ({ resultSales, render }: any) => {
         />
       )}
       {render === "items" && (
-        <Table<any>
+        <Table<ItemTableRow>
           columns={columnItems}
           dataSource={itemsMapInfo(resultSales)}
           pagination={false}

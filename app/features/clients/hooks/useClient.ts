@@ -6,6 +6,7 @@ import {
   selectClientsLoading,
   selectClientsResults,
   selectCurrentClient,
+  selectSuccesClientFlag,
 } from "../store/client.selector";
 import {
   getAllListClients,
@@ -14,6 +15,8 @@ import {
   updateOneClientByID,
   deleteOneClientByID,
   clearCurrentClientData,
+  clearSuccessFlagClient,
+  resetAllDataClient,
 } from "../store/client.slice";
 import { IClient } from "../types";
 
@@ -24,6 +27,7 @@ export const useClient = () => {
   const currentClient = useAppSelector(selectCurrentClient);
   const loading = useAppSelector(selectClientsLoading);
   const error = useAppSelector(selectClientsError);
+  const successClient = useAppSelector(selectSuccesClientFlag);
 
   const getAllClients = (page?: number) => {
     dispatch(getAllListClients(page));
@@ -49,9 +53,18 @@ export const useClient = () => {
     dispatch(clearCurrentClientData());
   };
 
+  const resetCurrentStateClient = () => {
+    dispatch(clearSuccessFlagClient());
+  };
+
+  const resetDataClient = () => {
+    dispatch(resetAllDataClient());
+  };
+
   return {
     info,
     results,
+    successClient,
     currentClient,
     loading,
     error,
@@ -61,5 +74,7 @@ export const useClient = () => {
     deleteOneClient,
     updateOneClient,
     clearDataCurrentClient,
+    resetCurrentStateClient,
+    resetDataClient,
   };
 };

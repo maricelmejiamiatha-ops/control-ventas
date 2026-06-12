@@ -77,8 +77,9 @@ function ClientButtonModal({ text, action, idClient }: ISalesForm) {
   }, [action, isModalOpen]);
 
   useEffect(() => {
-    if (!isModalOpen) {
+    if (!isModalOpen || currentClient) {
       clearDataCurrentClient();
+      form.resetFields()
     }
   }, [isModalOpen]);
 

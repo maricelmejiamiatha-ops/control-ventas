@@ -1,84 +1,89 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Button, Modal, Avatar, List, Skeleton, ConfigProvider } from "antd";
+import { useState, useEffect } from "react";
+import {
+  Button,
+  Modal,
+  List,
+  Skeleton,
+  ConfigProvider,
+  FormInstance,
+} from "antd";
 import { useClient } from "../hooks/useClient";
+import { IClient } from "../types";
 
-interface DataType {
-  gender?: string;
-  name?: string;
-  email?: string;
-  avatar?: string;
-  loading: boolean;
-}
+type ClientFormValues = {
+  idClient: number;
+  client: string;
+};
 
-const PAGE_SIZE = 3;
+type ClientListProps = {
+  form: FormInstance<ClientFormValues>;
+};
 
-const ClientList = ({ form }: any) => {
-  const { info, results } = useClient();
+const ClientList = ({ form }: ClientListProps) => {
+  const {
+    info,
+    results,
+    getAllClients,
+    successClient,
+    resetCurrentStateClient,
+    resetDataClient,
+  } = useClient();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [initLoading, setInitLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<DataType[]>([]);
-  const [list, setList] = useState<DataType[]>([]);
-  const [page, setPage] = useState(1);
+  const [initLoading, setInitLoading] = useState(false);
+  const [list, setList] = useState<Omit<IClient, "ciClient">[]>([]);
+  const [current, setCurrent] = useState(1);
 
   const showModal = () => {
     setIsModalOpen(true);
+    setCurrent(1);
+    setInitLoading(true);
+    getAllClients(1);
   };
 
-  const handleOk = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
+    resetDataClient();
+    resetCurrentStateClient();
+    setList([]);
+    setCurrent(1);
+    setInitLoading(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const fetchData = (currentPage: number) => {
-    const fakeDataUrl = `https://660d2bd96ddfa2943b33731c.mockapi.io/api/users?page=${currentPage}&limit=${PAGE_SIZE}`;
-    return fetch(fakeDataUrl).then((res) => res.json());
+  const fetchData = () => {
+    const nextPage = current + 1;
+    getAllClients(nextPage);
+    setCurrent(nextPage);
   };
 
   const handleChooseClient = (idClient: number) => {
-    const userInfo = results.find((item) => item.idClient === idClient);
-    if (!userInfo) return;
+    const client = list.find((item) => item.idClient === idClient);
+    if (!client) return;
+
     form.setFieldsValue({
-      idClient: userInfo.idClient,
-      client: userInfo.nameClient,
+      idClient: client.idClient,
+      client: client.nameClient,
     });
-    setIsModalOpen(false);
+
+    closeModal();
   };
 
   useEffect(() => {
-    fetchData(page).then((res) => {
-      const results = Array.isArray(res) ? res : [];
-      setInitLoading(false);
-      setData(results);
-      setList(results);
-    });
-  }, []);
+    if (!successClient) return;
 
-  const onLoadMore = () => {
-    setLoading(true);
-    setList(
-      data.concat(
-        Array.from({ length: PAGE_SIZE }).map(() => ({ loading: true })),
-      ),
-    );
-    const nextPage = page + 1;
-    setPage(nextPage);
-    fetchData(nextPage).then((res) => {
-      const results = Array.isArray(res) ? res : [];
-      const newData = data.concat(results);
-      setData(newData);
-      setList(newData);
-      setLoading(false);
-      window.dispatchEvent(new Event("resize"));
-    });
-  };
+    if (current === 1) {
+      setList(results);
+    } else {
+      setList((prev) => [...prev, ...results]);
+    }
+
+    setInitLoading(false);
+    resetCurrentStateClient();
+  }, [successClient, results, current]);
 
   const loadMore =
-    !initLoading && !loading ? (
+    !initLoading && current < (info?.pages || 1) ? (
       <div
         style={{
           textAlign: "center",
@@ -87,7 +92,7 @@ const ClientList = ({ form }: any) => {
           lineHeight: "32px",
         }}
       >
-        <Button onClick={onLoadMore}>Cargar más</Button>
+        <Button onClick={fetchData}>Cargar más</Button>
       </div>
     ) : null;
 
@@ -104,24 +109,28 @@ const ClientList = ({ form }: any) => {
 
         <Modal
           title="Lista de clientes"
-          closable={{ "aria-label": "Custom Close Button" }}
           open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
+          onCancel={closeModal}
+          footer={null}
         >
           <List
-            className="demo-loadmore-list"
             loading={initLoading}
             itemLayout="horizontal"
             loadMore={loadMore}
-            dataSource={results}
+            dataSource={list}
             renderItem={(item) => (
               <List.Item
                 key={item.idClient}
-                actions={[<a key="list-loadmore-edit">Seleccionar</a>]}
-                onClick={() => handleChooseClient(item.idClient)}
+                actions={[
+                  <a
+                    key="select"
+                    onClick={() => handleChooseClient(item.idClient)}
+                  >
+                    Seleccionar
+                  </a>,
+                ]}
               >
-                <Skeleton avatar title={false} loading={false} active>
+                <Skeleton loading={false} active>
                   <div>{item.nameClient}</div>
                 </Skeleton>
               </List.Item>

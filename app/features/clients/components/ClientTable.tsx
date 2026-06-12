@@ -2,6 +2,15 @@
 import React from "react";
 import { Table } from "antd";
 import ClientButtonModal from "./ClientButtonModal";
+import { IClient } from "../types";
+
+interface ClientRow {
+  key: number;
+  idClient: number;
+  numberItem: number;
+  nameClient: string;
+  ciClient: string;
+}
 
 const columnsClient = [
   {
@@ -26,7 +35,7 @@ const columnsClient = [
     title: "Acciones",
     key: "actions",
     width: 140,
-    render: ({ idClient }: any) => (
+    render: ({ idClient }: { idClient: number }) => (
       <div className="flex gap-1">
         <ClientButtonModal text="Editar" action="update" idClient={idClient} />
         <ClientButtonModal
@@ -39,19 +48,21 @@ const columnsClient = [
   },
 ];
 
-const clientMapInfo = (data: any) => {
-  return data?.map(({ idClient, nameClient, ciClient }: any, index: any) => ({
-    key: idClient,
-    idClient,
-    numberItem: index + 1,
-    nameClient: nameClient,
-    ciClient: ciClient,
-  }));
+const clientMapInfo = (data: IClient[]) => {
+  return data?.map(
+    ({ idClient, nameClient, ciClient }: IClient, index: number) => ({
+      key: idClient,
+      idClient,
+      numberItem: index + 1,
+      nameClient: nameClient,
+      ciClient: ciClient,
+    }),
+  );
 };
 
-function ClientTable({ resultClients }: any) {
+function ClientTable({ resultClients }: { resultClients: IClient[] }) {
   return (
-    <Table<any>
+    <Table<ClientRow>
       columns={columnsClient}
       dataSource={clientMapInfo(resultClients)}
       pagination={false}

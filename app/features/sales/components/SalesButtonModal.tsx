@@ -1,8 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal, Form, FormProps, DatePicker, Input } from "antd";
 import { useSales } from "../hooks/useSales";
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
+
 import {
   DeleteOutlined,
   FolderAddOutlined,
@@ -12,7 +14,7 @@ import ClientList from "../../clients/components/ClientList";
 
 type FieldType = {
   idClient: number;
-  dateDetail: any;
+  dateDetail: Dayjs;
 };
 
 type ISalesForm = {
@@ -29,10 +31,9 @@ function SalesButtonModal({ text, action, idDetail }: ISalesForm) {
     deleteOneSale,
     updateOneSale,
     currentSale,
+    info,
   } = useSales();
-
   const [form] = Form.useForm();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -52,6 +53,7 @@ function SalesButtonModal({ text, action, idDetail }: ISalesForm) {
       });
       setIsModalOpen(false);
       form.resetFields();
+      console.log(":D");
     }
 
     if (action === "delete" && idDetail) {
@@ -125,7 +127,6 @@ function SalesButtonModal({ text, action, idDetail }: ISalesForm) {
                 >
                   <Input placeholder="Nombre cliente" readOnly disabled />
                 </Form.Item>
-
                 <ClientList form={form} />
               </div>
 

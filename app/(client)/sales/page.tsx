@@ -1,21 +1,16 @@
 "use client";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SalesTable from "@/app/features/sales/components/SalesTable";
 import SCPagination from "@/app/shared/components/SCPagination";
 import SalesButtonModal from "@/app/features/sales/components/SalesButtonModal";
 import { useSales } from "@/app/features/sales/hooks/useSales";
-import { useUser } from "@/app/features/user/hooks/useUser";
-import { useClient } from "@/app/features/clients/hooks/useClient";
 
 function Page() {
   const { info, results, getAllSales } = useSales();
-  const { getInfoUser } = useUser();
-  const {getAllClients} = useClient();
+  const [pageCurrent, setPageCurrent] = useState(1);
 
   useEffect(() => {
     getAllSales();
-    getInfoUser();
-    getAllClients();
   }, []);
 
   return (
@@ -30,7 +25,7 @@ function Page() {
       </div>
 
       <div className="flex justify-center mt-6">
-        <SCPagination infoSales={info} />
+        <SCPagination infoSales={info} render="sales" />
       </div>
     </div>
   );

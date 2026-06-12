@@ -127,7 +127,7 @@ const salesSlice = createSlice({
 
       // TODO CREATE
       .addCase(createSale.fulfilled, (state, action) => {
-        state.results.unshift(action.payload.results);
+        // state.results.unshift(action.payload.results);
       })
 
       // TODO UPDATE

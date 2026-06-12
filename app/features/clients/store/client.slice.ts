@@ -20,6 +20,7 @@ export interface IClientState {
   currentClient: IClient | null;
   loading: boolean;
   error: string | null;
+  success: boolean;
 }
 
 const initialState: IClientState = {
@@ -28,6 +29,7 @@ const initialState: IClientState = {
   currentClient: null,
   loading: false,
   error: null,
+  success: false,
 };
 
 export const getAllListClients = createAsyncThunk<
@@ -100,6 +102,17 @@ const clientSlice = createSlice({
     clearCurrentClientData: (state) => {
       state.currentClient = null;
     },
+    clearSuccessFlagClient: (state) => {
+      state.success = false;
+    },
+    resetAllDataClient: (state) => {
+      state.info = null;
+      state.results = [];
+      state.currentClient = null;
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+    },
   },
 
   extraReducers: (builder) => {
@@ -113,6 +126,7 @@ const clientSlice = createSlice({
         state.loading = false;
         state.info = action.payload.info;
         state.results = action.payload.results;
+        state.success = action.payload.success;
       })
       .addCase(getAllListClients.rejected, (state, action) => {
         state.loading = false;
@@ -148,5 +162,9 @@ const clientSlice = createSlice({
 });
 
 export default clientSlice.reducer;
-export const { clearInfoClientError, clearCurrentClientData } =
-  clientSlice.actions;
+export const {
+  clearInfoClientError,
+  clearCurrentClientData,
+  clearSuccessFlagClient,
+  resetAllDataClient,
+} = clientSlice.actions;

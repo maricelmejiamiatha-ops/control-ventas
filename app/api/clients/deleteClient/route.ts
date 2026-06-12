@@ -27,19 +27,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const clientHistory = await prisma.listDetail.count({
-      where: {
-        idDetail: data.idDetail,
-      },
-    });
-
-    if (clientHistory > 0) {
-      return NextResponse.json(
-        { success: false, message: "No se puede eliminar a este cliente" },
-        { status: 404 },
-      );
-    }
-
     await prisma.client.delete({
       where: {
         idClient: dataClient.idClient,

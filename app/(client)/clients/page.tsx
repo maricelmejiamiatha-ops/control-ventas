@@ -1,12 +1,16 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useClient } from "@/app/features/clients/hooks/useClient";
 import SCPagination from "@/app/shared/components/SCPagination";
 import ClientButtonModal from "@/app/features/clients/components/ClientButtonModal";
 import ClientTable from "@/app/features/clients/components/ClientTable";
 
 function Page() {
-  const { info, results } = useClient();
+  const { info, results, getAllClients } = useClient();
+  useEffect(()=>{
+    getAllClients();
+  },[])
+
   return (
     <div className="flex flex-col flex-1">
       <div className="flex items-center justify-between">
@@ -15,11 +19,11 @@ function Page() {
       </div>
 
       <div className="flex-1">
-        <ClientTable resultClients={results}/>
+        <ClientTable resultClients={results} />
       </div>
 
       <div className="flex justify-center mt-6">
-        <SCPagination infoSales={info} />
+        <SCPagination infoSales={info} render={undefined} />
       </div>
     </div>
   );
